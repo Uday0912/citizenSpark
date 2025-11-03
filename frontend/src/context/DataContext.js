@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
 import { demoDistricts, demoMetrics, demoCacheStatus } from '../utils/demoData';
+import { API_BASE_URL } from '../config/api';
 
 const DataContext = createContext();
 
@@ -74,15 +75,12 @@ export const DataProvider = ({ children }) => {
 
   // Get API URL dynamically at runtime
   const getApiUrl = () => {
-    // Use explicit env var if set
-    if (process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-    // For Vercel deployment, API is on same origin
-    // Runtime detection - use same origin with /api path
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/api`;
-    }
+    // 1) Explicit env var wins
+    if (process.env.REACT_APP_API_URL) return process.env.REACT_APP_API_URL;
+    // 2) Configured constant (Render backend)
+    if (API_BASE_URL) return API_BASE_URL;
+    // 3) Fallback to same-origin /api
+    if (typeof window !== 'undefined') return `${window.location.origin}/api`;
     return '/api';
   };
 
