@@ -287,7 +287,7 @@ Deploy the React frontend to Vercel for fast, global CDN distribution. The backe
 4. Configure:
    - **Framework Preset**: Create React App
    - **Root Directory**: `.` (root)
-   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Build Command**: `cd frontend; npm install; npm run build`
    - **Output Directory**: `frontend/build`
 5. Add Environment Variable:
    - `REACT_APP_API_URL` = `https://your-backend-url.com/api`
