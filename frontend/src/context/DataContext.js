@@ -5,7 +5,6 @@ import { API_BASE_URL } from '../config/api';
 
 const DataContext = createContext();
 
-// Initial state
 const initialState = {
   districts: [],
   selectedDistrict: null,
@@ -20,7 +19,6 @@ const initialState = {
   }
 };
 
-// Action types
 const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
@@ -32,7 +30,6 @@ const ActionTypes = {
   CLEAR_ERROR: 'CLEAR_ERROR'
 };
 
-// Reducer
 const dataReducer = (state, action) => {
   switch (action.type) {
     case ActionTypes.SET_LOADING:
@@ -64,29 +61,21 @@ const dataReducer = (state, action) => {
   }
 };
 
-// Simple client-side cache and inflight request dedupe
 const CACHE_TTL_MS = 1000 * 60 * 60; // 1 hour
 const DISTRICTS_CACHE_KEY = 'mgnrega:districts:v1';
 const ongoingRequests = new Map();
 
-// Data provider component
 export const DataProvider = ({ children }) => {
   const [state, dispatch] = useReducer(dataReducer, initialState);
 
-  // Get API URL dynamically at runtime
   const getApiUrl = () => {
-    // 1) Explicit env var wins
     if (process.env.REACT_APP_API_URL) return process.env.REACT_APP_API_URL;
-    // 2) Configured constant (Render backend)
     if (API_BASE_URL) return API_BASE_URL;
-    // 3) Fallback to same-origin /api
     if (typeof window !== 'undefined') return `${window.location.origin}/api`;
     return '/api';
   };
 
-  // API helper functions with retry logic
   const apiCall = async (endpoint, options = {}, retries = 4, attempt = 0) => {
-    // Build a key to dedupe identical inflight requests
     const dedupeKey = `${endpoint}|${options.method || 'GET'}|${JSON.stringify(options.params || {})}|${JSON.stringify(options.data || {})}`;
     if (ongoingRequests.has(dedupeKey)) {
       return ongoingRequests.get(dedupeKey);
@@ -112,19 +101,16 @@ export const DataProvider = ({ children }) => {
 
         const status = error.response?.status;
 
-        // If server provided Retry-After header, honor it
         const retryAfter = error.response?.headers?.['retry-after'];
 
         if (status === 429 && retries > 0) {
           let delayMs = 0;
 
           if (retryAfter) {
-            // Retry-After may be seconds or an HTTP date; try to parse seconds first
             const seconds = parseInt(retryAfter, 10);
             if (!Number.isNaN(seconds)) {
               delayMs = seconds * 1000;
             } else {
-              // Fallback: try to parse date and compute difference
               const date = Date.parse(retryAfter);
               if (!Number.isNaN(date)) {
                 delayMs = Math.max(1000, date - Date.now());
@@ -133,7 +119,6 @@ export const DataProvider = ({ children }) => {
               }
             }
           } else {
-            // Exponential backoff with jitter
             const base = 1000;
             delayMs = Math.min(30000, base * Math.pow(2, attempt)) + Math.floor(Math.random() * 1000);
           }
@@ -143,34 +128,28 @@ export const DataProvider = ({ children }) => {
           return apiCall(endpoint, options, retries - 1, attempt + 1);
         }
 
-        // For other errors or exhausted retries, return null
         console.log('API call failed, using fallback data');
         return null;
       }
     })();
 
     ongoingRequests.set(dedupeKey, promise);
-    // Ensure cleanup when the request completes
     promise.finally(() => ongoingRequests.delete(dedupeKey));
     return promise;
   };
 
-  // Actions
   const actions = {
-    // Fetch all districts
     fetchDistricts: async (params = {}) => {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
       dispatch({ type: ActionTypes.CLEAR_ERROR });
       
       try {
-        // Try to use cached districts first
         try {
           const raw = localStorage.getItem(DISTRICTS_CACHE_KEY);
           if (raw) {
             const parsed = JSON.parse(raw);
             if (parsed?.timestamp && (Date.now() - parsed.timestamp) < CACHE_TTL_MS && Array.isArray(parsed.data)) {
               dispatch({ type: ActionTypes.SET_DISTRICTS, payload: parsed.data });
-              // Still attempt a background refresh but don't block the UI
               (async () => {
                 const fresh = await apiCall('/districts', { params });
                 if (fresh && fresh.data) {
@@ -185,7 +164,6 @@ export const DataProvider = ({ children }) => {
           console.warn('Districts cache read failed:', cacheErr);
         }
 
-        // If no valid cache, make API call (with a small delay to avoid thundering herd)
         await new Promise(resolve => setTimeout(resolve, 300));
         const data = await apiCall('/districts', { params });
 
@@ -198,7 +176,6 @@ export const DataProvider = ({ children }) => {
           dispatch({ type: ActionTypes.SET_DISTRICTS, payload: data.data });
           return data;
         } else {
-          // Use demo data if API fails
           dispatch({ type: ActionTypes.SET_DISTRICTS, payload: demoDistricts });
           return { data: demoDistricts };
         }
@@ -209,7 +186,6 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Fetch district performance data
     fetchDistrictPerformance: async (districtId, params = {}) => {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
       dispatch({ type: ActionTypes.CLEAR_ERROR });
@@ -228,7 +204,6 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Compare districts
     compareDistricts: async (districtIds, params = {}) => {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
       dispatch({ type: ActionTypes.CLEAR_ERROR });
@@ -248,7 +223,6 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Get state comparison
     fetchStateComparison: async (params = {}) => {
       try {
         const data = await apiCall('/compare/states', { params });
@@ -262,7 +236,6 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Get trends data
     fetchTrends: async (districtId, params = {}) => {
       try {
         const data = await apiCall(`/compare/trends/${districtId}`, { params });
@@ -276,10 +249,8 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Get cache status
     fetchCacheStatus: async () => {
       try {
-        // Add a small delay to prevent rate limiting
         await new Promise(resolve => setTimeout(resolve, 500));
         const data = await apiCall('/cache/status');
         
@@ -287,7 +258,6 @@ export const DataProvider = ({ children }) => {
           dispatch({ type: ActionTypes.SET_CACHE_STATUS, payload: data.data });
           return data;
         } else {
-          // Use demo cache status if API fails
           dispatch({ type: ActionTypes.SET_CACHE_STATUS, payload: demoCacheStatus });
           return { data: demoCacheStatus };
         }
@@ -298,7 +268,6 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Sync data
     syncData: async (force = false) => {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
       dispatch({ type: ActionTypes.CLEAR_ERROR });
@@ -319,33 +288,27 @@ export const DataProvider = ({ children }) => {
       }
     },
 
-    // Set selected district
     setSelectedDistrict: (district) => {
       dispatch({ type: ActionTypes.SET_SELECTED_DISTRICT, payload: district });
     },
 
-    // Clear error
     clearError: () => {
       dispatch({ type: ActionTypes.CLEAR_ERROR });
     }
   };
 
-  // Load initial data
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        // Use demo data immediately for better UX
         dispatch({ type: ActionTypes.SET_DISTRICTS, payload: demoDistricts });
         dispatch({ type: ActionTypes.SET_METRICS, payload: demoMetrics });
         dispatch({ type: ActionTypes.SET_CACHE_STATUS, payload: demoCacheStatus });
         
-        // Try to fetch real data in background (silently)
         setTimeout(async () => {
           try {
             await actions.fetchCacheStatus();
             await actions.fetchDistricts({ limit: 50 });
           } catch (error) {
-            // Silently use demo data
             console.log('Using demo data');
           }
         }, 2000);
@@ -370,7 +333,6 @@ export const DataProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the data context
 export const useData = () => {
   const context = useContext(DataContext);
   if (!context) {

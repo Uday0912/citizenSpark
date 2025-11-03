@@ -20,12 +20,12 @@
   width: 100%;
 }
 
-/* Chart.js custom styles */
+
 .chart-wrapper canvas {
   max-height: 100% !important;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .chart-container {
     padding: 1rem;
@@ -36,7 +36,7 @@
   }
 }
 
-/* Dark mode support */
+
 @media (prefers-color-scheme: dark) {
   .chart-container {
     background: #1f2937;

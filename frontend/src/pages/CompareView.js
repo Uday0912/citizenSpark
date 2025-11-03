@@ -27,7 +27,6 @@ const CompareView = () => {
 
   useEffect(() => {
     if (viewMode === 'states') {
-      // Create demo state comparison data
       const demoStateComparison = [
         { stateName: 'Maharashtra', performanceScore: 85, totalDistricts: 36 },
         { stateName: 'Tamil Nadu', performanceScore: 82, totalDistricts: 38 },
@@ -54,7 +53,6 @@ const CompareView = () => {
 
     setIsComparing(true);
     try {
-      // Create demo comparison data
       const demoComparisonData = {
         districts: selectedDistricts.map(district => ({
           districtName: district.districtName || district.name,
@@ -87,7 +85,6 @@ const CompareView = () => {
     return 'Needs Improvement';
   };
 
-  // Removed loading condition since we use demo data immediately
 
   if (error) {
     return (

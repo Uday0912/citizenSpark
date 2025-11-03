@@ -1,7 +1,4 @@
-/**
- * MongoDB connection handler optimized for serverless environments
- * Caches connections to avoid multiple connections in serverless functions
- */
+
 
 const mongoose = require('mongoose');
 
@@ -18,16 +15,13 @@ async function connectDB() {
     throw new Error('Please define MONGODB_URI environment variable');
   }
 
-  // Return existing connection if available and connected
   if (cached.conn) {
     if (cached.conn.readyState === 1) {
       return cached.conn;
     }
-    // Connection is not ready, reset it
     cached.conn = null;
   }
 
-  // Create new connection promise if not already creating
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,

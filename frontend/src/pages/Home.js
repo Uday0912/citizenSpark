@@ -23,7 +23,6 @@ const Home = () => {
     }
   }, [districts.length, fetchCacheStatus, fetchDistricts]);
 
-  // Removed loading condition since we use demo data immediately
 
   if (error) {
     return (
@@ -37,7 +36,6 @@ const Home = () => {
     );
   }
 
-  // Calculate summary statistics
   const totalDistricts = cacheStatus.totalDistricts || districts.length;
   const totalMetrics = cacheStatus.totalMetrics || 0;
   const isDataHealthy = cacheStatus.isHealthy;

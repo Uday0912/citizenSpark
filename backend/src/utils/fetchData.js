@@ -5,7 +5,6 @@ const Metrics = require('../models/Metrics');
 const DATA_GOV_BASE_URL = process.env.DATA_GOV_BASE_URL || 'https://api.data.gov.in/resource';
 const API_KEY = process.env.DATA_GOV_API_KEY;
 
-// MGNREGA API endpoints (these would need to be updated with actual data.gov.in endpoints)
 const ENDPOINTS = {
   districts: '/mgnrega-districts',
   employment: '/mgnrega-employment-data',
@@ -13,12 +12,7 @@ const ENDPOINTS = {
   wages: '/mgnrega-wages-data'
 };
 
-/**
- * Fetch data from data.gov.in API
- * @param {string} endpoint - API endpoint
- * @param {Object} params - Query parameters
- * @returns {Promise<Array>} - API response data
- */
+
 const fetchFromAPI = async (endpoint, params = {}) => {
   try {
     const url = `${DATA_GOV_BASE_URL}${endpoint}`;
@@ -58,11 +52,7 @@ const fetchFromAPI = async (endpoint, params = {}) => {
   }
 };
 
-/**
- * Process and normalize district data
- * @param {Array} rawData - Raw API data
- * @returns {Array} - Normalized district data
- */
+
 const processDistrictData = (rawData) => {
   return rawData.map(record => ({
     districtId: record.district_id || record.districtId,
@@ -78,17 +68,12 @@ const processDistrictData = (rawData) => {
   })).filter(district => district.districtId && district.districtName);
 };
 
-/**
- * Process and normalize metrics data
- * @param {Array} rawData - Raw API data
- * @returns {Array} - Normalized metrics data
- */
+
 const processMetricsData = (rawData) => {
   return rawData.map(record => {
     const year = parseInt(record.year) || new Date().getFullYear();
     const month = parseInt(record.month) || new Date().getMonth() + 1;
     
-    // Calculate performance rates
     const employmentRate = record.total_households > 0 ? 
       (record.households_provided_work / record.total_households) * 100 : 0;
     const workCompletionRate = record.total_workdays > 0 ? 
@@ -124,10 +109,7 @@ const processMetricsData = (rawData) => {
   }).filter(metrics => metrics.districtId);
 };
 
-/**
- * Fetch all MGNREGA data from API
- * @returns {Promise<Array>} - Combined data from all endpoints
- */
+
 const fetchDataFromAPI = async () => {
   try {
     console.log('Starting data fetch from data.gov.in API...');
@@ -136,7 +118,6 @@ const fetchDataFromAPI = async () => {
       throw new Error('DATA_GOV_API_KEY is not configured');
     }
     
-    // Fetch data from multiple endpoints
     const [districtsData, employmentData, worksData, wagesData] = await Promise.allSettled([
       fetchFromAPI(ENDPOINTS.districts),
       fetchFromAPI(ENDPOINTS.employment),
@@ -158,7 +139,6 @@ const fetchDataFromAPI = async () => {
       wages: results.wages.length
     });
     
-    // Process and combine data
     const processedDistricts = processDistrictData(results.districts);
     const processedMetrics = processMetricsData([
       ...results.employment,
@@ -176,10 +156,7 @@ const fetchDataFromAPI = async () => {
   }
 };
 
-/**
- * Sync districts data to database
- * @param {Array} districtsData - Processed districts data
- */
+
 const syncDistricts = async (districtsData) => {
   try {
     console.log(`Syncing ${districtsData.length} districts...`);
@@ -209,10 +186,7 @@ const syncDistricts = async (districtsData) => {
   }
 };
 
-/**
- * Sync metrics data to database
- * @param {Array} metricsData - Processed metrics data
- */
+
 const syncMetrics = async (metricsData) => {
   try {
     console.log(`Syncing ${metricsData.length} metrics records...`);
@@ -246,27 +220,21 @@ const syncMetrics = async (metricsData) => {
   }
 };
 
-/**
- * Full data synchronization
- * @returns {Promise<Object>} - Sync results
- */
+
 const fullDataSync = async () => {
   try {
     console.log('Starting full data synchronization...');
     const startTime = Date.now();
     
-    // Fetch data from API
     const apiData = await fetchDataFromAPI();
     
     if (!apiData.districts.length && !apiData.metrics.length) {
       throw new Error('No data received from API');
     }
     
-    // Sync districts
     const districtResults = apiData.districts.length > 0 ? 
       await syncDistricts(apiData.districts) : { syncedCount: 0, errorCount: 0 };
     
-    // Sync metrics
     const metricsResults = apiData.metrics.length > 0 ? 
       await syncMetrics(apiData.metrics) : { syncedCount: 0, errorCount: 0 };
     

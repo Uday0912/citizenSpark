@@ -48,7 +48,6 @@ const Dashboard = () => {
     }
   };
 
-  // Removed loading condition since we use demo data immediately
 
   if (error) {
     return (
@@ -62,7 +61,6 @@ const Dashboard = () => {
     );
   }
 
-  // Calculate summary metrics
   const summaryMetrics = metrics.length > 0 ? [
     {
       title: 'Total Households',

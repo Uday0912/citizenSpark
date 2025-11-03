@@ -33,7 +33,6 @@ const metricsSchema = new mongoose.Schema({
     required: true,
     index: true
   },
-  // Employment metrics
   totalHouseholds: {
     type: Number,
     default: 0
@@ -58,7 +57,6 @@ const metricsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  // Work metrics
   totalWorkdays: {
     type: Number,
     default: 0
@@ -67,7 +65,6 @@ const metricsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  // Financial metrics
   totalWages: {
     type: Number,
     default: 0
@@ -84,7 +81,6 @@ const metricsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  // Performance indicators
   employmentRate: {
     type: Number,
     default: 0
@@ -97,7 +93,6 @@ const metricsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  // Metadata
   dataSource: {
     type: String,
     default: 'data.gov.in'
@@ -114,13 +109,11 @@ const metricsSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Compound indexes for efficient queries
 metricsSchema.index({ districtId: 1, year: 1, month: 1 });
 metricsSchema.index({ stateName: 1, year: 1, month: 1 });
 metricsSchema.index({ financialYear: 1, districtId: 1 });
 metricsSchema.index({ lastUpdated: -1 });
 
-// Virtual for calculating performance metrics
 metricsSchema.virtual('performanceScore').get(function() {
   const employmentWeight = 0.4;
   const workWeight = 0.3;
@@ -133,7 +126,6 @@ metricsSchema.virtual('performanceScore').get(function() {
   );
 });
 
-// Ensure virtual fields are serialized
 metricsSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Metrics', metricsSchema);

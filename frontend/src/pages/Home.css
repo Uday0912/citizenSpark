@@ -137,7 +137,7 @@
   transform: translateY(-1px);
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
   .home {
     padding: 1rem;

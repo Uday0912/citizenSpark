@@ -55,7 +55,7 @@
   }
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
   .offline-indicator {
     padding: 0.5rem;

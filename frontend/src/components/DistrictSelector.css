@@ -135,9 +135,9 @@
   margin-top: 0.125rem;
 }
 
-/* Removed loading spinner styles since we use demo data immediately */
 
-/* Removed unused spin animation */
+
+
 
 .no-results {
   display: flex;
@@ -163,7 +163,7 @@
   text-align: center;
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
   .district-selector {
     min-width: auto;

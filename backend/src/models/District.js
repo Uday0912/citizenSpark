@@ -35,7 +35,6 @@ const districtSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for efficient queries
 districtSchema.index({ stateName: 1, districtName: 1 });
 districtSchema.index({ coordinates: '2dsphere' });
 

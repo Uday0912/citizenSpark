@@ -235,7 +235,7 @@
   transform: translateY(-1px);
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 1024px) {
   .charts-section {
     grid-template-columns: 1fr;

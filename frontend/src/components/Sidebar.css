@@ -1,14 +1,14 @@
 .sidebar {
   position: fixed;
-  top: 80px; /* Below header */
+  top: 80px; 
   left: 0;
-  height: calc(100vh - 80px); /* Full height minus header */
+  height: calc(100vh - 80px); 
   width: 320px;
   background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
   box-shadow: 8px 0 32px rgba(102, 126, 234, 0.12), 0 0 0 1px rgba(102, 126, 234, 0.08);
   transform: translateX(-100%);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100; /* Lower than header z-index: 150 */
+  z-index: 100; 
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(20px);
@@ -73,7 +73,7 @@
   letter-spacing: 0.02em;
 }
 
-/* Show sidebar title on desktop and mobile. Keep it slightly smaller than the top header to avoid visual duplication. */
+
 .sidebar-title {
   display: block;
 }
@@ -348,13 +348,13 @@
   transform: scale(1.1);
 }
 
-/* Desktop styles */
+
 @media (min-width: 1024px) {
   .sidebar {
     position: fixed;
     transform: translateX(0);
-    top: 80px; /* Below header */
-    height: calc(100vh - 80px); /* Full height minus header */
+    top: 80px; 
+    height: calc(100vh - 80px); 
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
   
@@ -375,7 +375,7 @@
   }
 }
 
-/* Mobile styles */
+
 @media (max-width: 1023px) {
   .sidebar {
     width: 100%;
@@ -395,14 +395,14 @@
     transform: translateX(2px);
   }
 
-  /* On mobile overlay, keep the title visible and slightly larger for clarity */
+  
   .sidebar-title {
     display: block;
     font-size: 1.1rem;
   }
 }
 
-/* Animation for sidebar opening */
+
 @keyframes slideInFromLeft {
   from {
     transform: translateX(-100%);

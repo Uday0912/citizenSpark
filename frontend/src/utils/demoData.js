@@ -1,4 +1,3 @@
-// Demo data for when API is not available
 export const demoDistricts = [
   {
     districtId: 'demo-001',

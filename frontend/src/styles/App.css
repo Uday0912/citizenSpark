@@ -1,4 +1,4 @@
-/* Global styles */
+
 * {
   box-sizing: border-box;
 }
@@ -20,7 +20,7 @@ code {
     monospace;
 }
 
-/* App layout */
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -39,21 +39,21 @@ code {
   transition: margin-left 0.3s ease;
   background: #f8fafc;
   min-height: calc(100vh - 80px);
-  margin-left: 320px; /* Make room for fixed sidebar on desktop */
+  margin-left: 320px; 
 }
 
 .main-content.sidebar-open {
   margin-left: 0;
 }
 
-/* Desktop: Sidebar is always visible, content needs margin */
+
 @media (min-width: 1024px) {
   .main-content {
-    margin-left: 320px !important; /* Always make room for sidebar */
+    margin-left: 320px !important; 
   }
 }
 
-/* Mobile: No margin needed when sidebar is hidden */
+
 @media (max-width: 1023px) {
   .main-content {
     margin-left: 0 !important;
@@ -64,7 +64,7 @@ code {
   }
 }
 
-/* Scrollbar styling */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -84,13 +84,13 @@ code {
   background: #94a3b8;
 }
 
-/* Focus styles */
+
 *:focus {
   outline: 2px solid #667eea;
   outline-offset: 2px;
 }
 
-/* Button styles */
+
 button {
   font-family: inherit;
   cursor: pointer;
@@ -100,7 +100,7 @@ button {
   margin: 0;
 }
 
-/* Link styles */
+
 a {
   color: #667eea;
   text-decoration: none;
@@ -111,13 +111,13 @@ a:hover {
   color: #5a67d8;
 }
 
-/* Form elements */
+
 input, select, textarea {
   font-family: inherit;
   font-size: inherit;
 }
 
-/* Utility classes */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -326,7 +326,7 @@ input, select, textarea {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-/* Responsive grid */
+
 @media (min-width: 640px) {
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -365,7 +365,7 @@ input, select, textarea {
   }
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
   .main-content {
     padding: 0;
@@ -378,7 +378,7 @@ input, select, textarea {
   }
 }
 
-/* Dark mode support */
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #111827;
@@ -422,7 +422,7 @@ input, select, textarea {
   }
 }
 
-/* Print styles */
+
 @media print {
   .no-print {
     display: none !important;

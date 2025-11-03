@@ -80,7 +80,7 @@
   text-align: center;
 }
 
-/* Removed loading spinner styles since we use demo data immediately */
+
 
 .metrics-section {
   margin-bottom: 2rem;
@@ -130,7 +130,7 @@
   max-width: 400px;
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
   .district-selector-page {
     padding: 1rem;

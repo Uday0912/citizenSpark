@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/App.css';
 
-// Components
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
@@ -12,7 +11,6 @@ import DistrictSelectorPage from './pages/DistrictSelectorPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 
-// Context
 import { DataProvider } from './context/DataContext';
 
 function App() {

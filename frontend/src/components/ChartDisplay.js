@@ -14,7 +14,6 @@ import {
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import './ChartDisplay.css';
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,7 +35,6 @@ const ChartDisplay = ({
 }) => {
   const chartRef = useRef(null);
 
-  // Default chart options
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -79,7 +77,6 @@ const ChartDisplay = ({
     ...options
   };
 
-  // Process data based on type
   const processData = () => {
     if (!data || data.length === 0) {
       return {

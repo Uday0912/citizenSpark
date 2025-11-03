@@ -4,7 +4,6 @@ const District = require('../models/District');
 const Metrics = require('../models/Metrics');
 const { fetchDataFromAPI } = require('../utils/fetchData');
 
-// Get all districts with basic info
 router.get('/', async (req, res) => {
   try {
     const { state, search, limit = 50, page = 1 } = req.query;
@@ -51,7 +50,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get district performance data
 router.get('/:id/performance', async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,7 +72,6 @@ router.get('/:id/performance', async (req, res) => {
       });
     }
     
-    // Calculate summary statistics
     const summary = {
       totalHouseholds: metrics.reduce((sum, m) => sum + (m.totalHouseholds || 0), 0),
       householdsProvidedWork: metrics.reduce((sum, m) => sum + (m.householdsProvidedWork || 0), 0),
@@ -107,7 +104,6 @@ router.get('/:id/performance', async (req, res) => {
   }
 });
 
-// Get district details
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -134,12 +130,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Sync district data from API
 router.post('/sync', async (req, res) => {
   try {
     const { force = false } = req.body;
     
-    // Check if data is recent (within last 24 hours) unless forced
     if (!force) {
       const recentData = await Metrics.findOne({
         lastUpdated: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
@@ -154,7 +148,6 @@ router.post('/sync', async (req, res) => {
       }
     }
     
-    // Fetch fresh data from API
     const apiData = await fetchDataFromAPI();
     
     if (!apiData || apiData.length === 0) {
@@ -164,13 +157,11 @@ router.post('/sync', async (req, res) => {
       });
     }
     
-    // Process and save data
     let processedCount = 0;
     let errorCount = 0;
     
     for (const record of apiData) {
       try {
-        // Update or create metrics record
         await Metrics.findOneAndUpdate(
           {
             districtId: record.districtId,

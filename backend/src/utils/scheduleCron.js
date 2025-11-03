@@ -3,15 +3,12 @@ const { fullDataSync } = require('./fetchData');
 
 let cronJob = null;
 
-/**
- * Start the cron job for data synchronization
- */
+
 const startCronJob = () => {
   const schedule = process.env.CRON_SCHEDULE || '0 2 * * *'; // Default: 2 AM daily
   
   console.log(`Setting up cron job with schedule: ${schedule}`);
   
-  // Validate cron expression
   if (!cron.validate(schedule)) {
     console.error('Invalid cron schedule:', schedule);
     return;
@@ -40,9 +37,7 @@ const startCronJob = () => {
   console.log('✅ Cron job started successfully');
 };
 
-/**
- * Stop the cron job
- */
+
 const stopCronJob = () => {
   if (cronJob) {
     cronJob.stop();
@@ -50,9 +45,7 @@ const stopCronJob = () => {
   }
 };
 
-/**
- * Get cron job status
- */
+
 const getCronStatus = () => {
   return {
     isRunning: cronJob ? cronJob.running : false,
@@ -61,9 +54,7 @@ const getCronStatus = () => {
   };
 };
 
-/**
- * Manually trigger data sync
- */
+
 const triggerManualSync = async () => {
   console.log('🔄 Manual data sync triggered...');
   

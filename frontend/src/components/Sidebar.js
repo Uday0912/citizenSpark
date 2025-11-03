@@ -50,14 +50,14 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Overlay for mobile */}
+      {}
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
       
       <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Sparkles size={20} style={{ color: 'rgba(255, 255, 255, 0.95)' }} />
-            {/* Short brand name + small subtitle to avoid repeating the full header title */}
+            {}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <h3 className="sidebar-title">MGNREGA</h3>
               <span className="sidebar-subtitle">Navigation</span>

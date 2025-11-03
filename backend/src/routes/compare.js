@@ -3,7 +3,6 @@ const router = express.Router();
 const Metrics = require('../models/Metrics');
 const District = require('../models/District');
 
-// Compare multiple districts
 router.post('/', async (req, res) => {
   try {
     const { districtIds, year, month, financialYear, metrics } = req.body;
@@ -32,7 +31,6 @@ router.post('/', async (req, res) => {
       });
     }
     
-    // Group data by district
     const groupedData = {};
     comparisonData.forEach(record => {
       const key = record.districtId;
@@ -42,17 +40,14 @@ router.post('/', async (req, res) => {
       groupedData[key].push(record);
     });
     
-    // Calculate comparison metrics
     const comparison = Object.keys(groupedData).map(districtId => {
       const records = groupedData[districtId];
       const latest = records[0]; // Most recent record
       
-      // Calculate averages
       const avgEmploymentRate = records.reduce((sum, r) => sum + (r.employmentRate || 0), 0) / records.length;
       const avgWorkCompletionRate = records.reduce((sum, r) => sum + (r.workCompletionRate || 0), 0) / records.length;
       const avgWagePaymentRate = records.reduce((sum, r) => sum + (r.wagePaymentRate || 0), 0) / records.length;
       
-      // Calculate totals
       const totalHouseholds = records.reduce((sum, r) => sum + (r.totalHouseholds || 0), 0);
       const totalPersons = records.reduce((sum, r) => sum + (r.totalPersons || 0), 0);
       const totalWorkdays = records.reduce((sum, r) => sum + (r.totalWorkdays || 0), 0);
@@ -92,7 +87,6 @@ router.post('/', async (req, res) => {
       };
     });
     
-    // Sort by performance score (descending)
     comparison.sort((a, b) => b.performanceScore - a.performanceScore);
     
     res.json({
@@ -117,7 +111,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get state-wise comparison
 router.get('/states', async (req, res) => {
   try {
     const { year, month, financialYear } = req.query;
@@ -176,7 +169,6 @@ router.get('/states', async (req, res) => {
   }
 });
 
-// Get performance trends over time
 router.get('/trends/:districtId', async (req, res) => {
   try {
     const { districtId } = req.params;
@@ -193,7 +185,6 @@ router.get('/trends/:districtId', async (req, res) => {
       });
     }
     
-    // Format data for charting
     const chartData = trends.reverse().map(record => ({
       period: `${record.year}-${String(record.month).padStart(2, '0')}`,
       employmentRate: record.employmentRate,

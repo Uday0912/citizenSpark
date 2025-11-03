@@ -3,7 +3,6 @@ const router = express.Router();
 const Metrics = require('../models/Metrics');
 const District = require('../models/District');
 
-// Get cached data status
 router.get('/status', async (req, res) => {
   try {
     const totalDistricts = await District.countDocuments();
@@ -48,7 +47,6 @@ router.get('/status', async (req, res) => {
   }
 });
 
-// Get cached data for offline use
 router.get('/export', async (req, res) => {
   try {
     const { format = 'json', state, year, month } = req.query;
@@ -64,7 +62,6 @@ router.get('/export', async (req, res) => {
       .limit(1000); // Limit for performance
     
     if (format === 'csv') {
-      // Convert to CSV format
       const csvHeaders = [
         'District ID', 'District Name', 'State Name', 'Year', 'Month',
         'Total Households', 'Households Provided Work', 'Total Persons',
@@ -101,7 +98,6 @@ router.get('/export', async (req, res) => {
       res.setHeader('Content-Disposition', 'attachment; filename="mgnrega_data.csv"');
       res.send(csvContent);
     } else {
-      // Return JSON format
       res.json({
         success: true,
         data: {
@@ -121,7 +117,6 @@ router.get('/export', async (req, res) => {
   }
 });
 
-// Clear cache (admin function)
 router.delete('/clear', async (req, res) => {
   try {
     const { confirm } = req.body;
@@ -153,7 +148,6 @@ router.delete('/clear', async (req, res) => {
   }
 });
 
-// Get data freshness info
 router.get('/freshness', async (req, res) => {
   try {
     const freshness = await Metrics.aggregate([
