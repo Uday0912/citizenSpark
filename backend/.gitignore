@@ -1,2 +1,24 @@
 .env
 node_modules
+# Builds and caches
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Vercel local config
+.vercel/
