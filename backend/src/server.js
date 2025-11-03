@@ -25,7 +25,10 @@ app.use(helmet());
 const allowedOrigins = (() => {
   if (process.env.NODE_ENV === 'production') {
     if (process.env.FRONTEND_URLS) return process.env.FRONTEND_URLS.split(',').map(s => s.trim());
-    return ['https://yourdomain.com'];
+    // Default allowlist for production when env not provided
+    return [
+      'https://mgnrega-oqlp-izewi2ci8-udays-projects-d8504db5.vercel.app'
+    ];
   }
   return ['http://localhost:3000', 'http://localhost:3001'];
 })();
